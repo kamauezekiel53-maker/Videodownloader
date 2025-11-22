@@ -1,399 +1,274 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Downloader | Ezekiel-Tech Inc</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #ff6b6b;
-            --secondary: #4ecdc4;
-            --dark: #1a1a2e;
-            --darker: #16213e;
-            --light: #f0f0f0;
-            --gray: #a0aec0;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
-            color: var(--light);
-            min-height: 100vh;
-            padding: 20px;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            padding: 30px 0;
-            margin-bottom: 30px;
-        }
-
-        header h1 {
-            font-size: 2.8rem;
-            margin-bottom: 15px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        header p {
-            font-size: 1.2rem;
-            color: var(--gray);
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .search-container {
-            background: rgba(26, 32, 53, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .search-box {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        #search-input {
-            flex: 1;
-            padding: 15px 20px;
-            border: none;
-            border-radius: 50px;
-            background: rgba(15, 23, 42, 0.7);
-            color: white;
-            font-size: 1.1rem;
-        }
-
-        #search-input:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.3);
-        }
-
-        #search-btn {
-            padding: 15px 30px;
-            background: linear-gradient(45deg, var(--primary), #ff8e53);
-            border: none;
-            border-radius: 50px;
-            color: white;
-            font-weight: 600;
-            font-size: 1.1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .results-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-
-        .video-card {
-            background: rgba(26, 32, 53, 0.8);
-            border-radius: 15px;
-            overflow: hidden;
-            transition: 0.3s;
-        }
-
-        .thumbnail-container {
-            position: relative;
-            height: 200px;
-        }
-
-        .thumbnail {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .duration {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.6);
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
-
-        .video-info {
-            padding: 18px;
-        }
-
-        .video-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 12px;
-        }
-
-        .download-btn {
-            flex: 1;
-            padding: 10px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            color: white;
-            font-weight: 600;
-        }
-
-        .download-mp4 {
-            background: linear-gradient(45deg, var(--primary), #ff8e53);
-        }
-
-        .download-mp3 {
-            background: linear-gradient(45deg, var(--secondary), #42b883);
-        }
-
-        /* Loader */
-        .loader {
-            text-align: center;
-            padding: 40px;
-            display: none;
-        }
-
-        .spinner {
-            width: 55px;
-            height: 55px;
-            border: 5px solid rgba(255,255,255,0.2);
-            border-top: 5px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: auto;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .error-message,
-        .empty-state {
-            display: none;
-            margin-top: 20px;
-            text-align: center;
-            color: var(--gray);
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 0.9rem;
-            color: var(--gray);
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background: rgba(78,205,196,0.9);
-            padding: 14px 20px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            opacity: 0;
-            transform: translateY(60px);
-            transition: 0.3s;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>YouTube Downloader — EK-Tech | Ezekiel Kamau</title>
+  <style>
+    :root{
+      --bg:#0f1720;
+      --card:#0b1220;
+      --muted:#9aa6b2;
+      --accent:#06b6d4;
+      --accent-2:#7c3aed;
+      --glass: rgba(255,255,255,0.04);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,var(--bg),#071026);
+      color:#e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:28px;
+    }
+    .wrap{max-width:980px;margin:0 auto}
+    header{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+    h1{font-size:20px;margin:0}
+    .sub{color:var(--muted);font-size:13px}
+    .search{
+      display:flex;gap:8px;margin-top:18px;
+    }
+    input[type="search"]{
+      flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);
+      background:var(--card);color:inherit;font-size:15px;
+      outline: none;
+    }
+    button{
+      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+      border:none;color:white;padding:10px 14px;border-radius:10px;font-weight:600;
+      cursor:pointer;
+    }
+    .results{margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+    .card{background:var(--glass);padding:12px;border-radius:12px;display:flex;gap:12px;align-items:flex-start}
+    .thumb{width:140px;height:80px;flex:0 0 140px;border-radius:8px;object-fit:cover;background:#08121b}
+    .meta{flex:1}
+    .title{font-size:15px;margin:0 0 6px 0}
+    .meta .channel{color:var(--muted);font-size:13px;margin-bottom:8px}
+    .actions{display:flex;gap:8px;margin-top:8px}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:8px;color:var(--muted);cursor:pointer}
+    .note{font-size:13px;color:var(--muted);margin-top:16px}
+    footer{margin-top:28px;color:var(--muted);font-size:13px;text-align:center}
+    .loader{display:inline-block;width:18px;height:18px;border-radius:50%;border:3px solid rgba(255,255,255,0.08);border-top-color:var(--accent);animation:spin .9s linear infinite;vertical-align:middle}
+    @keyframes spin {to{transform:rotate(360deg)}}
+    .small{font-size:12px;color:var(--muted)}
+    .error{color:#ff7b7b}
+  </style>
 </head>
-
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fab fa-youtube"></i> YouTube Downloader</h1>
-            <p>Download MP4 or MP3 instantly. Powered by Ezekiel-Tech Inc.</p>
-        </header>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>YouTube Downloader — EK-Tech</h1>
+        <div class="sub">Built for Ezekiel Kamau — Search, preview metadata, then download via your extraction backend.</div>
+      </div>
+      <div class="small">Frontend-only: searches use YouTube Data API (metadata only)</div>
+    </header>
 
-        <div class="search-container">
+    <main>
+      <div class="search" role="search" aria-label="YouTube search">
+        <input id="q" type="search" placeholder="Search YouTube videos (e.g., lo-fi beats)" />
+        <button id="searchBtn">Search</button>
+      </div>
 
-            <div class="search-box">
-                <input type="text" id="search-input" placeholder="Enter YouTube URL or video name...">
-                <button id="search-btn"><i class="fas fa-search"></i> Search</button>
+      <div id="status" class="note small">Enter a query and press Search. (Your Google API key is used only for metadata.)</div>
+
+      <div id="results" class="results" aria-live="polite"></div>
+
+      <div class="note">
+        Important: This frontend <strong>does not</strong> attempt to download from Google. Downloads are performed by your backend endpoints:
+        <code>/mp4?url=VIDEO_URL</code> and <code>/mp3?url=VIDEO_URL</code>.
+      </div>
+    </main>
+
+    <footer>
+      Developed for Ezekiel Kamau — keep your API key for metadata only. Backend should implement extraction (ytdl-core / yt-dlp) and enable CORS as needed.
+    </footer>
+  </div>
+
+  <script>
+    /**
+     * CONFIGURATION
+     * - Replace 'YOUR_YOUTUBE_API_KEY' with your YouTube Data API v3 key.
+     * - This key must be used only for search and video metadata calls.
+     *
+     * BACKEND:
+     * - /mp4?url=VIDEO_URL  -> returns JSON { download: "DIRECT_FILE_URL" } OR redirects/streams file
+     * - /mp3?url=VIDEO_URL  -> streams an MP3 download (Content-Disposition) OR returns { download: "..."}
+     *
+     * SECURITY NOTE:
+     * - Do NOT attempt to use the Google key to perform downloads.
+     * - Keep your key restricted to HTTP referrers (your domain) and to the YouTube Data API.
+     */
+    const YT_API_KEY = 'AIzaSyBh5f3-YNrL9bI97vbQiCQQlXxVHo4Ju2A'; // <-- PLACE YOUR API KEY HERE (metadata/search ONLY)
+
+    const resultsEl = document.getElementById('results');
+    const statusEl = document.getElementById('status');
+    const searchBtn = document.getElementById('searchBtn');
+    const qInput = document.getElementById('q');
+
+    function setStatus(html) { statusEl.innerHTML = html; }
+
+    async function searchYouTube(q) {
+      if (!YT_API_KEY) {
+        setStatus('<span class="error">No YouTube API key configured. Set YT_API_KEY in the code.</span>');
+        return [];
+      }
+      setStatus('<span class="small">Searching <span class="loader"></span></span>');
+      const params = new URLSearchParams({
+        part: 'snippet',
+        q: q,
+        type: 'video',
+        maxResults: '12',
+        key: YT_API_KEY
+      });
+      try {
+        const resp = await fetch(`https://www.googleapis.com/youtube/v3/search?${params}`);
+        if (!resp.ok) {
+          const txt = await resp.text();
+          setStatus('<span class="error">YouTube API error — check key, quotas, restrictions.</span>');
+          console.error('YT API error', resp.status, txt);
+          return [];
+        }
+        const data = await resp.json();
+        if (!data.items) return [];
+        // Map to a small result structure
+        const items = data.items.map(item => ({
+          id: item.id.videoId,
+          title: item.snippet.title,
+          channel: item.snippet.channelTitle,
+          thumb: (item.snippet.thumbnails.medium || item.snippet.thumbnails.default).url,
+          description: item.snippet.description
+        }));
+        setStatus(`Showing ${items.length} results for "<strong>${escapeHtml(q)}</strong>"`);
+        return items;
+      } catch (err) {
+        console.error(err);
+        setStatus('<span class="error">Network error while searching.</span>');
+        return [];
+      }
+    }
+
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    function renderResults(items) {
+      resultsEl.innerHTML = '';
+      if (!items.length) {
+        resultsEl.innerHTML = '<div class="small">No results.</div>';
+        return;
+      }
+      items.forEach(it => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img class="thumb" src="${escapeHtml(it.thumb)}" alt="${escapeHtml(it.title)} thumbnail" />
+          <div class="meta">
+            <h3 class="title">${escapeHtml(it.title)}</h3>
+            <div class="channel">${escapeHtml(it.channel)}</div>
+            <div class="small">${escapeHtml(truncate(it.description, 150))}</div>
+            <div class="actions">
+              <button class="btn-ghost btn-details" data-id="${it.id}">Details</button>
+              <button class="btn-ghost btn-mp4" data-id="${it.id}">Get MP4</button>
+              <button class="btn-ghost btn-mp3" data-id="${it.id}">Get MP3</button>
+              <a class="btn-ghost" href="https://www.youtube.com/watch?v=${it.id}" target="_blank" rel="noopener">Open YouTube</a>
             </div>
+          </div>
+        `;
+        resultsEl.appendChild(card);
+      });
 
-            <div id="error-message" class="error-message"></div>
+      // Attach actions
+      resultsEl.querySelectorAll('.btn-mp4').forEach(btn => {
+        btn.addEventListener('click', onGetMp4);
+      });
+      resultsEl.querySelectorAll('.btn-mp3').forEach(btn => {
+        btn.addEventListener('click', onGetMp3);
+      });
+      resultsEl.querySelectorAll('.btn-details').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const id = e.currentTarget.dataset.id;
+          alert('Video URL: https://www.youtube.com/watch?v=' + id + '\n\nUse this URL when calling your backend endpoints.');
+        });
+      });
+    }
 
-            <div id="loader" class="loader">
-                <div class="spinner"></div>
-                <p>Loading...</p>
-            </div>
+    function truncate(s, n){ if(!s)return ''; return s.length>n? s.slice(0,n-1)+'…':s; }
 
-            <div id="empty-state" class="empty-state">
-                <i class="fas fa-video-slash"></i>
-                <p>No results found</p>
-            </div>
-
-            <div id="results-container" class="results-container"></div>
-        </div>
-
-        <div class="footer">
-            © 2025 YouTube Downloader | Powered by Ezekiel-Tech Inc  
-            <br> Educational use only. Respect copyright.
-        </div>
-    </div>
-
-    <div id="download-toast" class="toast">
-        <i class="fas fa-check-circle"></i>
-        <span>Download started.</span>
-    </div>
-
-    <script>
-        const searchInput = document.getElementById("search-input");
-        const searchBtn = document.getElementById("search-btn");
-        const resultsContainer = document.getElementById("results-container");
-        const loader = document.getElementById("loader");
-        const emptyState = document.getElementById("empty-state");
-        const errorMessage = document.getElementById("error-message");
-        const toast = document.getElementById("download-toast");
-
-        function showToast(msg) {
-            toast.querySelector("span").textContent = msg;
-            toast.classList.add("show");
-            setTimeout(() => toast.classList.remove("show"), 3000);
+    async function onGetMp4(e) {
+      const id = e.currentTarget.dataset.id;
+      const videoUrl = `https://www.youtube.com/watch?v=${id}`;
+      setStatus(`<span class="small">Requesting MP4 from backend for <strong>${escapeHtml(id)}</strong> <span class="loader"></span></span>`);
+      try {
+        // Expect JSON { download: "DIRECT_URL" } or the endpoint may stream/redirect
+        const resp = await fetch(`/mp4?url=${encodeURIComponent(videoUrl)}`);
+        if (!resp.ok) {
+          const txt = await resp.text();
+          setStatus(`<span class="error">Backend /mp4 error: ${resp.status}</span>`);
+          console.error('Backend /mp4 error', resp.status, txt);
+          return;
         }
-
-        function showError(msg) {
-            errorMessage.textContent = msg;
-            errorMessage.style.display = "block";
+        const contentType = resp.headers.get('Content-Type') || '';
+        if (contentType.includes('application/json')) {
+          const data = await resp.json();
+          if (data.download) {
+            // Trigger download via temporary anchor
+            triggerDownload(data.download, `${id}.mp4`);
+            setStatus('Download started (direct link provided by backend).');
+          } else {
+            setStatus('<span class="error">Backend responded but gave no download URL.</span>');
+          }
+        } else {
+          // Backend might be streaming a file — create blob and download
+          const blob = await resp.blob();
+          const url = URL.createObjectURL(blob);
+          triggerDownload(url, `${id}.mp4`);
+          URL.revokeObjectURL(url);
+          setStatus('MP4 streamed from backend and downloaded.');
         }
+      } catch (err) {
+        console.error(err);
+        setStatus('<span class="error">Network error contacting /mp4 backend.</span>');
+      }
+    }
 
-        function extractVideoId(url) {
-            const match = url.match(/(?:v=|youtu\.be\/)([^&#]+)/);
-            return match ? match[1] : null;
-        }
+    async function onGetMp3(e) {
+      const id = e.currentTarget.dataset.id;
+      const videoUrl = `https://www.youtube.com/watch?v=${id}`;
+      setStatus(`<span class="small">Requesting MP3 from backend for <strong>${escapeHtml(id)}</strong> <span class="loader"></span></span>`);
+      try {
+        // For MP3, many backends stream a file with Content-Disposition.
+        // We'll attempt to open in a new tab/window so browser handles the stream (and downloads).
+        const endpoint = `/mp3?url=${encodeURIComponent(videoUrl)}`;
+        // Use window.open to allow streaming/download behavior.
+        window.open(endpoint, '_blank', 'noopener');
+        setStatus('Opened backend /mp3 in a new tab — if backend streams MP3 it should download or play.');
+      } catch (err) {
+        console.error(err);
+        setStatus('<span class="error">Error opening /mp3 endpoint.</span>');
+      }
+    }
 
-        async function searchVideos(query) {
-            if (!query.trim()) {
-                showError("Enter a search term or YouTube URL.");
-                return;
-            }
+    function triggerDownload(url, filename) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename || '';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
 
-            loader.style.display = "block";
-            errorMessage.style.display = "none";
-            emptyState.style.display = "none";
-            resultsContainer.innerHTML = "";
+    // wire search
+    searchBtn.addEventListener('click', async () => {
+      const q = qInput.value.trim();
+      if (!q) { setStatus('<span class="error">Please enter a search term.</span>'); return; }
+      const items = await searchYouTube(q);
+      renderResults(items);
+    });
+    qInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ searchBtn.click(); } });
 
-            try {
-                let apiURL;
-                const isUrl = query.includes("youtube.com") || query.includes("youtu.be");
-
-                if (isUrl) {
-                    const id = extractVideoId(query);
-                    apiURL = `https://apis.davidcyriltech.my.id/youtube/video?id=${id}`;
-                } else {
-                    apiURL = `https://apis.davidcyriltech.my.id/youtube/search?q=${encodeURIComponent(query)}`;
-                }
-
-                const res = await fetch(apiURL);
-                const data = await res.json();
-
-                if (!res.ok || !data.result) {
-                    throw new Error("Invalid API response");
-                }
-
-                const videos = isUrl ? [data.result] : data.result.videos;
-
-                if (!videos || videos.length === 0) {
-                    emptyState.style.display = "block";
-                    return;
-                }
-
-                renderVideos(videos.slice(0, 6));
-
-            } catch (err) {
-                showError(err.message);
-            }
-
-            loader.style.display = "none";
-        }
-
-        function renderVideos(videos) {
-            resultsContainer.innerHTML = "";
-
-            videos.forEach(v => {
-                const card = document.createElement("div");
-                card.className = "video-card";
-
-                card.innerHTML = `
-                    <div class="thumbnail-container">
-                        <img class="thumbnail" src="${v.thumbnail}">
-                        <div class="duration">${v.duration}</div>
-                    </div>
-                    <div class="video-info">
-                        <h3>${v.title}</h3>
-                        <p style="color: var(--gray);">${v.author?.name || "Unknown"}</p>
-
-                        <div class="video-actions">
-                            <button class="download-btn download-mp4" data-url="https://www.youtube.com/watch?v=${v.id}">MP4</button>
-                            <button class="download-btn download-mp3" data-url="https://www.youtube.com/watch?v=${v.id}">MP3</button>
-                        </div>
-                    </div>
-                `;
-
-                resultsContainer.appendChild(card);
-            });
-
-            document.querySelectorAll(".download-mp4").forEach(btn =>
-                btn.onclick = () => download(btn.dataset.url, "mp4")
-            );
-
-            document.querySelectorAll(".download-mp3").forEach(btn =>
-                btn.onclick = () => download(btn.dataset.url, "mp3")
-            );
-        }
-
-        async function download(url, format) {
-            try {
-                let apiURL = format === "mp4"
-                    ? `https://apis.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(url)}`
-                    : `https://apis.davidcyriltech.my.id/youtube/mp3?url=${encodeURIComponent(url)}`;
-
-                const res = await fetch(apiURL);
-                const data = await res.json();
-
-                const dl = format === "mp4" ? data.result.download_url : data.result.downloadUrl;
-
-                window.open(dl, "_blank");
-                showToast("Download started.");
-
-            } catch {
-                showError("Download failed.");
-            }
-        }
-
-        searchBtn.onclick = () => searchVideos(searchInput.value);
-        searchInput.onkeypress = e => e.key === "Enter" && searchVideos(searchInput.value);
-    </script>
-
+    // initial demo text (optional)
+    qInput.value = '';
+  </script>
 </body>
 </html>
